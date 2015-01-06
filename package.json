@@ -1,0 +1,27 @@
+{
+  "name": "personal_blog",
+  "version": "0.0.1",
+  "author": "James Weber",
+  "description": "personal blog",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "license": "MIT",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.10.1",
+    "express": "^4.10.7",
+    "mongoose": "^3.8.21",
+    "multer": "^0.1.6",
+    "node-linkedin": "^0.3.4",
+    "path": "^0.4.9",
+    "request": "^2.51.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-autoprefixer": "^2.0.0",
+    "gulp-bower": "0.0.7",
+    "gulp-notify": "^2.1.0",
+    "gulp-ruby-sass": "^0.7.1"
+  }
+}
