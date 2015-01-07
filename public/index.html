@@ -1,0 +1,63 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+<h1>Twitter trend thing</h1>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-10 col-md-offset-2">
+
+      <form role="form">
+        <div class="form-group">
+          <label for="title">Track a term</label>
+          <input name="word" type="text" class="form-control" id="word">
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="trend"></div>
+
+<script type="text/javascript">
+
+  $('form').on('submit', function(event) {
+    event.preventDefault();
+    var form = $(this);
+    var data = form.serialize();
+    $.ajax({
+      type: 'POST',
+      url: '/track',
+      data: data,
+      success: function(data) {
+        console.log(data);
+      }
+    });
+
+    var loop = setInterval(function() {
+      $.ajax({
+        type: 'GET',
+        url: '/sample',
+        success: function(data) {
+          // console.log(data.tweets.length)
+          if (data.tweets.length > 100) { clearInterval(loop); }
+          data.tweets.forEach(function(item) {
+            console.log(item.text);
+            var tweet = $('<div class="tweet">' + item.text + '</div>')
+            $('#trend').append(tweet);
+          });
+          
+
+        }
+      });
+    }, 2000);
+
+  });
+
+
+</script>
+
+

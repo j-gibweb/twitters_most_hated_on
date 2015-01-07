@@ -15,7 +15,9 @@
     "multer": "^0.1.6",
     "node-linkedin": "^0.3.4",
     "path": "^0.4.9",
-    "request": "^2.51.0"
+    "request": "^2.51.0",
+    "twit": "^1.1.19",
+    "twitter-js-client": "0.0.5"
   },
   "devDependencies": {
     "gulp": "^3.8.10",

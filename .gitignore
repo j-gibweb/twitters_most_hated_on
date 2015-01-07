@@ -29,5 +29,5 @@ node_modules/*
 public/less
 
 *uploads/*
-*db.js
+*config.js
 *.DS_Store

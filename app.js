@@ -3,6 +3,10 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require("mongoose");
 var path = require('path');
+var Twit = require('twit');
+
+var env = process.env.NODE_ENV || 'dev';
+if (env === 'dev') {require('./config');}
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components',  express.static(path.join(__dirname, 'bower_components')));
@@ -10,38 +14,34 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 
 
-var Linkedin = require('node-linkedin')(process.env.LINKEDIN_API, process.env.LINKEDIN_SECRET, 'localhost:3000/oauth/linkedin/loggedin');
-var linkedin;
-var access_token;
-linkedin = Linkedin.init(access_token, { timeout: 10000 });
-
-app.get('/oauth/linkedin', function(req, res) {
-    Linkedin.auth.authorize(res, ['r_basicprofile', 'r_fullprofile', 'r_emailaddress', 'r_network', 'r_contactinfo', 'rw_nus', 'rw_groups', 'w_messages']);
+var T = new Twit({
+    consumer_key:         process.env.CONSUMER_KEY
+  , consumer_secret:      process.env.CONSUMER_SECRET
+  , access_token:         process.env.ACCESS_TOKEN
+  , access_token_secret:  process.env.ACCESS_TOKEN_SECRET
 });
 
-app.get('/oauth/linkedin/loggedin', function(req, res) {
-    Linkedin.auth.getAccessToken(res, req.query.code, function(err, results) {
-        if (err) {return console.error(err);}
+var tweets = [];
 
-        access_token = JSON.parse(results).access_token;
-        linkedin = Linkedin.init(access_token, {
-          timeout: 10000 
-        });
-        
-        return res.redirect('/');
-    });
+app.get('/', function(req, res) {
+  res.render("index.html");
 });
 
-app.get('/:name', function(req, res) {
-  
-  linkedin.companies.name(req.params.name, function(err, company) {
-      if (err) {
-        res.send(err);  
-      } else {
-        res.send(company);
-      }
+
+app.post('/track', function(req, res) {
+  var term = "#"+req.body.word;
+  var stream = T.stream('statuses/filter', { track: term, language: 'en'})
+  stream.on('tweet', function (tweet) {
+    tweets.push(tweet);
   });
-  
+  res.send("Ok, working");
+});
+
+
+app.get('/sample', function(req, res) {
+  console.log('/sample ' + tweets.length);
+  res.send({tweets: tweets});
+  tweets = [];
 });
 
 
